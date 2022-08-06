@@ -3,6 +3,8 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from dataclasses import make_dataclass
 
+from no_spark_in_my_home.src.generator import FakeDataGenerator
+
 
 class ForeignKey(BaseModel):
     field: str
@@ -42,4 +44,6 @@ async def hello(fields: Dataclass):
         translated_type = DEFAULT_TYPES_TRANSLATION.get(type[1], type[1])
         fields_enumeration.append((name[1], translated_type))
     dataclass = make_dataclass(fields.name, fields_enumeration)
-    return "Hello"
+    generator = FakeDataGenerator(dataclass)
+    data = generator.load()
+    return data
