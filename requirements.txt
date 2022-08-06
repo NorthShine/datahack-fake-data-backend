@@ -2,3 +2,4 @@ fastapi
 mimesis
 gunicorn
 uvicorn
+no-spark-in-my-home

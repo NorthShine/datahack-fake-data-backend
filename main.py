@@ -42,5 +42,4 @@ async def hello(fields: Dataclass):
         translated_type = DEFAULT_TYPES_TRANSLATION.get(type[1], type[1])
         fields_enumeration.append((name[1], translated_type))
     dataclass = make_dataclass(fields.name, fields_enumeration)
-    print(dataclass)
     return "Hello"
