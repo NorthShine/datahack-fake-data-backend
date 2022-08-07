@@ -4,10 +4,10 @@ services:
   backend:
     build: .
     expose:
-      - 8000:8000
+      - 5555:8000
   
   frontend:
-    image: scripthound/no_spark_front:latest
+    image: scripthound/no_spark_front:local
     ports:
       - 3000:3000
     env_file:
