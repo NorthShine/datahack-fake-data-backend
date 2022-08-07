@@ -1,5 +1,6 @@
 from typing import List, Optional
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from dataclasses import make_dataclass
 
@@ -28,6 +29,10 @@ class Dataclass(BaseModel):
     sqlModel: FakeSQLModel
 
 
+class Dataclasses(BaseModel):
+    models: List[Dataclass]
+
+
 DEFAULT_TYPES_TRANSLATION = {
     "string": "str"
 }
@@ -36,14 +41,26 @@ DEFAULT_TYPES_TRANSLATION = {
 app = FastAPI()
 
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=['*'],
+    allow_credentials=True,
+    allow_methods=['*'],
+    allow_headers=['*'],
+)
+
+
 @app.post('/generate_sql')
-async def hello(fields: Dataclass):
-    sqlModel = fields.sqlModel
-    fields_enumeration = []
-    for name, type in sqlModel.fields:
-        translated_type = DEFAULT_TYPES_TRANSLATION.get(type[1], type[1])
-        fields_enumeration.append((name[1], translated_type))
-    dataclass = make_dataclass(fields.name, fields_enumeration)
-    generator = FakeDataGenerator(dataclass)
-    data = generator.load()
-    return data
+async def hello(dataclasses: Dataclasses):
+    dataclasses_data = []
+    for fields in dataclasses.models:
+        sqlModel = fields.sqlModel
+        fields_enumeration = []
+        for name, type in sqlModel.fields:
+            translated_type = DEFAULT_TYPES_TRANSLATION.get(type[1], type[1])
+            fields_enumeration.append((name[1], translated_type))
+        dataclass = make_dataclass(fields.name, fields_enumeration)
+        generator = FakeDataGenerator(dataclass)
+        data = generator.load()
+        dataclasses_data.append({"name": fields.name, "data": data})
+    return dataclasses_data
