@@ -67,8 +67,8 @@ async def hello(dataclasses: Dataclasses):
         dataclass = make_dataclass(fields.name, fields_enumeration)
         generator = FakeDataGenerator(
             dataclass,
-            limit=fields.limit,
-            lang=fields.lang,
+            limit=fields.limit or 10,
+            lang=fields.lang or 'en',
             mask_per_field=fields.mask_per_field,
             range_per_field=fields.range_per_field,
             maxlength_per_field=fields.maxlength_per_field,
