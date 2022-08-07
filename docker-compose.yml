@@ -8,5 +8,7 @@ services:
   
   frontend:
     image: scripthound/no_spark_front:latest
-
-
+    ports:
+      - 3000:3000
+    env_file:
+      - .env
