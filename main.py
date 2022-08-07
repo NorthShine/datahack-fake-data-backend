@@ -73,6 +73,6 @@ async def hello(dataclasses: Dataclasses):
             range_per_field=fields.range_per_field,
             maxlength_per_field=fields.maxlength_per_field,
         )
-        data = generator.load()
+        data = generator.load(as_dicts=True)
         dataclasses_data.append({"name": fields.name, "data": data})
     return dataclasses_data
