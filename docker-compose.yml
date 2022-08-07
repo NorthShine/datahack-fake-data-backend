@@ -3,7 +3,7 @@ version: "3.7"
 services:
   backend:
     build: .
-    expose:
+    ports:
       - 5555:8000
   
   frontend:
