@@ -27,6 +27,11 @@ class FakeSQLModel(BaseModel):
 class Dataclass(BaseModel):
     name: str
     sqlModel: FakeSQLModel
+    lang: Optional[str] = None
+    limit: Optional[int] = None
+    mask_per_field: Optional[dict] = None
+    maxlength_per_field: Optional[List[dict]] = None
+    range_per_field: Optional[dict] = None
 
 
 class Dataclasses(BaseModel):
@@ -60,7 +65,14 @@ async def hello(dataclasses: Dataclasses):
             translated_type = DEFAULT_TYPES_TRANSLATION.get(type[1], type[1])
             fields_enumeration.append((name[1], translated_type))
         dataclass = make_dataclass(fields.name, fields_enumeration)
-        generator = FakeDataGenerator(dataclass)
+        generator = FakeDataGenerator(
+            dataclass,
+            limit=fields.limit,
+            lang=fields.lang,
+            mask_per_field=fields.mask_per_field,
+            range_per_field=fields.range_per_field,
+            maxlength_per_field=fields.maxlength_per_field,
+        )
         data = generator.load()
         dataclasses_data.append({"name": fields.name, "data": data})
     return dataclasses_data
